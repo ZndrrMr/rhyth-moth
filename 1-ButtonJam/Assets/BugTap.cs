@@ -4,13 +4,12 @@ public class BugTap : MonoBehaviour
 {
     private TapAreaManager tapAreaManager;
     public GameObject particleEffect; // Assign your particle prefab in the Inspector
-    private float tapRadius = .5f; // Fixed radius for tappable bugs
     public static bool isBugBeingTapped = false; // Changed to public for access by BugTapManager
 
     private void Start()
     {
         // Find the TapAreaManager in the scene
-        tapAreaManager = FindObjectOfType<TapAreaManager>();
+        tapAreaManager = FindFirstObjectByType<TapAreaManager>();
         if (tapAreaManager == null)
         {
             Debug.LogError("TapAreaManager not found in the scene!");
@@ -18,61 +17,61 @@ public class BugTap : MonoBehaviour
     }
 
     private void Update()
-{
-    // Check if the spacebar is pressed and no bug is currently being tapped
-    if (Input.GetKeyDown(KeyCode.Space) && !isBugBeingTapped && tapAreaManager != null)
+    {
+        // Remove the spacebar input handling from here
+    }
+
+    // New method to attempt tapping this bug
+    public bool TryTapBug()
     {
         if (IsInsideAnyTapRadius() && IsFurthestBug())
         {
             Debug.Log("Bug is inside a tap radius!");
-            isBugBeingTapped = true; // Lock the tap
+            isBugBeingTapped = true;
             TapBug();
+            return true;
         }
+        return false;
     }
-}
 
     private bool IsFurthestBug()
     {
-        // Get all BugTap instances in the scene
-        BugTap[] allBugs = FindObjectsOfType<BugTap>();
-
-        // Filter bugs that are within the tap radius
-        var bugsInRadius = System.Linq.Enumerable.Where(allBugs, bug =>
-        {
-            if (bug == this) return false; // Exclude this bug
-            float distance = Vector2.Distance(bug.transform.position, Vector2.zero);
-            return distance <= tapRadius; // Only include bugs within the radius
-        });
-
-        // Calculate this bug's distance from the origin
-        float thisDistance = Vector2.Distance(transform.position, Vector2.zero);
-
-        // Get this bug's movement direction
+        Vector2 thisPosition = transform.position;
         Vector2 thisDirection = GetMovementDirection();
+        
+        // Calculate how far along its path this bug is
+        float thisProgressAlongPath = Vector2.Dot(thisPosition, thisDirection);
 
-        // Check if any bug in the radius is further in its respective direction
-        foreach (var bug in bugsInRadius)
+        // Get all other bugs
+        BugTap[] allBugs = FindObjectsByType<BugTap>(FindObjectsSortMode.None);
+
+        foreach (var otherBug in allBugs)
         {
-            // Get the other bug's distance from the origin
-            float otherDistance = Vector2.Distance(bug.transform.position, Vector2.zero);
+            // Skip comparing to self
+            if (otherBug == this) continue;
 
-            // Get the other bug's movement direction
-            Vector2 otherDirection = bug.GetMovementDirection();
+            Vector2 otherPosition = otherBug.transform.position;
 
-            // Compare the relative distance in the direction of movement
-            float thisDot = Vector2.Dot(transform.position.normalized, thisDirection);
-            float otherDot = Vector2.Dot(bug.transform.position.normalized, otherDirection);
-
-            if (otherDistance > thisDistance && otherDot > thisDot)
+            // Only compare against other bugs that are in the tap radius
+            if (!tapAreaManager.IsInsideTapRadius(otherPosition, TapAreaManager.TapAreaType.Good))
             {
-                // Another bug is further in its own direction
+                continue;
+            }
+
+            // Calculate how far along its path the other bug is
+            Vector2 otherDirection = otherBug.GetMovementDirection();
+            float otherProgressAlongPath = Vector2.Dot(otherPosition, otherDirection);
+
+            // If another bug in the radius is further along its path, this isn't the one to tap
+            if (otherProgressAlongPath > thisProgressAlongPath)
+            {
                 return false;
             }
         }
 
-        // If no other bug is further in its respective direction, this bug is the furthest
+        // If we got here, this bug is the furthest along its path in the radius
         return true;
-}
+    }
 
     private Vector2 GetMovementDirection()
     {
@@ -97,38 +96,38 @@ public class BugTap : MonoBehaviour
     }
 
     private void TapBug()
-{
-    Debug.Log($"Bug tapped at position {transform.position}");
-
-    // Instantiate the particle effect
-    if (particleEffect != null)
     {
-        // Get the direction the bug is moving
-        Vector2 movementDirection = GetMovementDirection();
+        Debug.Log($"Bug tapped at position {transform.position}");
 
-        // Check if the movement direction is valid (non-zero)
-        if (movementDirection != Vector2.zero)
+        // Instantiate the particle effect
+        if (particleEffect != null)
         {
-            // Calculate the angle between the movement direction and the positive X-axis
-            float angle = (Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg) - 90f;
+            // Get the direction the bug is moving
+            Vector2 movementDirection = GetMovementDirection();
 
-            Debug.Log($"Particle effect angle: {angle} degrees");
+            // Check if the movement direction is valid (non-zero)
+            if (movementDirection != Vector2.zero)
+            {
+                // Calculate the angle between the movement direction and the positive X-axis
+                float angle = (Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg) - 90f;
 
-            // Create a rotation based on the calculated angle
-            Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                Debug.Log($"Particle effect angle: {angle} degrees");
 
-            // Instantiate the particle effect with the calculated rotation
-            GameObject effectInstance = Instantiate(particleEffect, transform.position, rotation);
+                // Create a rotation based on the calculated angle
+                Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
-            // Destroy the particle effect after its duration
-            Destroy(effectInstance, effectInstance.GetComponent<ParticleSystem>().main.duration);
+                // Instantiate the particle effect with the calculated rotation
+                GameObject effectInstance = Instantiate(particleEffect, transform.position, rotation);
+
+                // Destroy the particle effect after its duration
+                Destroy(effectInstance, effectInstance.GetComponent<ParticleSystem>().main.duration);
+            }
         }
+
+        // Destroy this bug
+        Destroy(gameObject);
+
+        // Reset the flag using BugTapManager
+        BugTapManager.Instance.ResetTapFlagWithDelay(0.1f); // Adjust delay as needed
     }
-
-    // Destroy this bug
-    Destroy(gameObject);
-
-    // Reset the flag using BugTapManager
-    BugTapManager.Instance.ResetTapFlagWithDelay(0.1f); // Adjust delay as needed
-}
 }
