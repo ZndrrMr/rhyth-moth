@@ -36,6 +36,6 @@ crashlytics-build.properties
 # [Aa]ssets/AssetStoreTools*
 
 # Ignore DOTween files
-Assets/DOTween/
-Assets/DOTween.dll
-Assets/DOTween.dll.mdb
+Assets/Plugins/Demigiant/DOTween/
+Assets/Plugins/Demigiant/DOTween.dll
+Assets/Plugins/Demigiant/DOTween.dll.mdb
