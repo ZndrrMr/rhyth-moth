@@ -1,41 +1,40 @@
-###
-# Unity folders and files
-###
-[Aa]ssets/AssetStoreTools*
-[Bb]uild/
 [Ll]ibrary/
-[Ll]ocal[Cc]ache/
-[Oo]bj/
 [Tt]emp/
-[Uu]nityGenerated/
-# file on crash reports
-sysinfo.txt
-# Unity3D generated meta files
-*.pidb.meta
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
 
-###
-# VS/MD solution and project files
-###
-[Ee]xportedObj/
-*.booproj
+# Visual Studio / MonoDevelop generated files
 *.csproj
+*.unityproj
 *.sln
 *.suo
-*.svd
-*.unityproj
+*.tmp
 *.user
 *.userprefs
 *.pidb
-.DS_Store
+*.booproj
+*.svd
 
-###
-# OS generated
-###
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
+# Unity generated meta files
+*.pidb.meta
+
+# Unity auto-generated files
+*.apk
+*.unitypackage
+
+# Crashlytics generated files
+crashlytics-build.properties
+
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!*.asset
+!*.unity
+
+# Uncomment this line if you wish to ignore the asset store tools plugin
+# [Aa]ssets/AssetStoreTools*
+
+# Exclude DOTween generated files (optional)
+Assets/DOTween/**/Resources/
+Assets/DOTween/Demigiant/DOTween.definitions.asset
