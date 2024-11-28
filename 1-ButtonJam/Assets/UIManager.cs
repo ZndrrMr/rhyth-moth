@@ -1,16 +1,23 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
     [SerializeField] private TextMeshProUGUI comboText;
+    [SerializeField] private Transform heartContainer; // Parent object for hearts
+    [SerializeField] private GameObject heartPrefab; // Heart UI prefab
+    private List<GameObject> hearts = new List<GameObject>();
     
     // Animation settings
     private readonly float popInScale = 1.5f;
     private readonly float popInDuration = 0.2f;
     private readonly float breakAnimDuration = 0.5f;
+    // Heart animation settings
+    private readonly float heartBreakDuration = 0.5f;
+    private readonly float heartBreakScale = 1.3f;
 
     private void Awake()
     {
@@ -30,6 +37,29 @@ public class UIManager : MonoBehaviour
             // Set your preferred font asset in the inspector
             comboText.fontStyle = FontStyles.Bold;
             comboText.alignment = TextAlignmentOptions.Center;
+        }
+
+        // Initialize hearts
+        if (heartContainer != null && heartPrefab != null)
+        {
+            InitializeHearts(FindFirstObjectByType<MissCounter>().maxMisses);
+        }
+    }
+
+    private void InitializeHearts(int count)
+    {
+        // Clear existing hearts
+        foreach (var heart in hearts)
+        {
+            Destroy(heart);
+        }
+        hearts.Clear();
+        
+        // Create new hearts
+        for (int i = 0; i < count; i++)
+        {
+            GameObject heart = Instantiate(heartPrefab, heartContainer);
+            hearts.Add(heart);
         }
     }
 
@@ -88,5 +118,24 @@ public class UIManager : MonoBehaviour
             comboText.gameObject.SetActive(false);
             comboText.transform.localScale = Vector3.one;
         });
+    }
+
+    public void RemoveHeart(int index)
+    {
+        if (index >= 0 && index < hearts.Count)
+        {
+            GameObject heart = hearts[index];
+            // Animate heart breaking
+            Sequence breakSequence = DOTween.Sequence();
+            
+            breakSequence.Append(heart.transform.DOScale(Vector3.one * heartBreakScale, heartBreakDuration * 0.3f));
+            breakSequence.Append(heart.transform.DOScale(Vector3.zero, heartBreakDuration * 0.7f));
+            breakSequence.Join(heart.transform.DOShakeRotation(heartBreakDuration, 90, 5, 90));
+            
+            breakSequence.OnComplete(() => {
+                Destroy(heart);
+                hearts.RemoveAt(index);
+            });
+        }
     }
 }

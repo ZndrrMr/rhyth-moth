@@ -10,6 +10,9 @@ public class MissCounter : MonoBehaviour
         currentMisses++;
         Debug.Log($"Misses: {currentMisses}/{maxMisses}");
         
+        // Animate heart removal
+        UIManager.Instance.RemoveHeart(maxMisses - currentMisses);
+        
         // Reset combo on miss
         BugTapManager.Instance.ResetCombo();
 
