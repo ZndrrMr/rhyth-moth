@@ -1,49 +1,25 @@
-###
 # Unity folders and files
-###
-[Aa]ssets/AssetStoreTools*
-[Bb]uild/
-[Ll]ibrary/
-[Ll]ocal[Cc]ache/
-[Oo]bj/
-[Tt]emp/
-[Uu]nityGenerated/
-# file on crash reports
-sysinfo.txt
-# Unity3D generated meta files
-*.pidb.meta
-
-###
-# VS/MD solution and project files
-###
-[Ee]xportedObj/
-*.booproj
-*.csproj
-*.sln
-*.suo
-*.svd
-*.unityproj
-*.user
-*.userprefs
-*.pidb
-.DS_Store
-
-###
-# OS generated
-###
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
+1-ButtonJam/[Aa]ssets/AssetStoreTools*
+1-ButtonJam/[Bb]uild/
+1-ButtonJam/[Ll]ibrary/
+1-ButtonJam/[Ll]ocal[Cc]ache/
+1-ButtonJam/[Oo]bj/
+1-ButtonJam/[Tt]emp/
+1-ButtonJam/[Uu]nityGenerated/
 
 # DOTween specific
-[Aa]ssets/Plugins/Demigiant/*
-[Aa]ssets/DOTween/*
-[Aa]ssets/Resources/DOTweenSettings.asset
-[Aa]ssets/Plugins/Demigiant.meta
-[Aa]ssets/DOTween.meta
-[Aa]ssets/Resources/DOTweenSettings.asset.meta
+1-ButtonJam/[Aa]ssets/Plugins/Demigiant/*
+1-ButtonJam/[Aa]ssets/DOTween/*
+1-ButtonJam/[Aa]ssets/Resources/DOTweenSettings.asset
+1-ButtonJam/[Aa]ssets/Plugins/Demigiant.meta
+1-ButtonJam/[Aa]ssets/DOTween.meta
+1-ButtonJam/[Aa]ssets/Resources/DOTweenSettings.asset.meta
+1-ButtonJam/[Aa]ssets/Plugins/*
+1-ButtonJam/[Aa]ssets/Plugins.meta
+
+# TextMesh Pro (if you want to ignore it)
+1-ButtonJam/[Aa]ssets/TextMesh Pro/*
+1-ButtonJam/[Aa]ssets/TextMesh Pro.meta
+
+# Logs
+1-ButtonJam/[Ll]ogs/
