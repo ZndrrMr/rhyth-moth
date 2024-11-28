@@ -39,3 +39,11 @@ sysinfo.txt
 Icon?
 ehthumbs.db
 Thumbs.db
+
+# DOTween specific
+[Aa]ssets/Plugins/Demigiant/*
+[Aa]ssets/DOTween/*
+[Aa]ssets/Resources/DOTweenSettings.asset
+[Aa]ssets/Plugins/Demigiant.meta
+[Aa]ssets/DOTween.meta
+[Aa]ssets/Resources/DOTweenSettings.asset.meta
