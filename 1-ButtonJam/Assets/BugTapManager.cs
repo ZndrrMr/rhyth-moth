@@ -6,6 +6,9 @@ public class BugTapManager : MonoBehaviour
     public static BugTapManager Instance { get; private set; }
     private MissCounter missCounter;
     private TapAreaManager tapAreaManager;
+    
+    private int currentCombo = 0;
+    public int CurrentCombo => currentCombo;
 
     private void Awake()
     {
@@ -29,7 +32,6 @@ public class BugTapManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && !BugTap.isBugBeingTapped)
         {
-            // Check if any bug was successfully tapped
             bool successfulTap = false;
             BugTap[] allBugs = FindObjectsByType<BugTap>(FindObjectsSortMode.None);
             
@@ -38,16 +40,31 @@ public class BugTapManager : MonoBehaviour
                 if (bug.TryTapBug())
                 {
                     successfulTap = true;
+                    IncrementCombo();
                     break;
                 }
             }
 
-            // If no bug was tapped, count it as a miss
             if (!successfulTap)
             {
                 missCounter.IncrementMissCounter();
+                ResetCombo();
             }
         }
+    }
+
+    private void IncrementCombo()
+    {
+        currentCombo++;
+        Debug.Log($"Combo: {currentCombo}");
+        UIManager.Instance.UpdateComboText(currentCombo);
+    }
+
+    public void ResetCombo()
+    {
+        currentCombo = 0;
+        Debug.Log("Combo Reset!");
+        UIManager.Instance.UpdateComboText(currentCombo);
     }
 
     public void ResetTapFlagWithDelay(float delay)

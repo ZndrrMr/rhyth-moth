@@ -9,6 +9,9 @@ public class MissCounter : MonoBehaviour
     {
         currentMisses++;
         Debug.Log($"Misses: {currentMisses}/{maxMisses}");
+        
+        // Reset combo on miss
+        BugTapManager.Instance.ResetCombo();
 
         if (currentMisses >= maxMisses)
         {
